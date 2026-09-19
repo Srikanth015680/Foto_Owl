@@ -1,5 +1,5 @@
 import { Directory, File, Paths } from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
+import { Asset, requestPermissionsAsync } from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import { useState } from "react";
 
@@ -28,7 +28,7 @@ export function useImageDownload(): UseImageDownloadResult {
     setIsDownloading(true);
 
     try {
-      const permission = await MediaLibrary.requestPermissionsAsync();
+      const permission = await requestPermissionsAsync();
 
       if (!permission.granted) {
         return {
@@ -47,9 +47,7 @@ export function useImageDownload(): UseImageDownloadResult {
         }
       );
 
-      const asset = await MediaLibrary.createAssetAsync(file.uri);
-
-      await MediaLibrary.createAlbumAsync("Gallery App", asset, false);
+      await Asset.create(file.uri);
 
       return {
         success: true,
